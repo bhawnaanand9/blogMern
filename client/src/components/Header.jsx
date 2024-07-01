@@ -1,12 +1,14 @@
 import React from "react";
 
-import { Button, Navbar, TextInput } from "flowbite-react";
+import { Avatar, Button, Dropdown, Navbar, TextInput } from "flowbite-react";
 import { Link, useLocation } from "react-router-dom";
 import { FaMoon } from "react-icons/fa";
 import { AiOutlineSearch } from "react-icons/ai";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   const path = useLocation().pathname;
+  const { currentUser } = useSelector((state) => state.user);
   return (
     <Navbar className="border-b-2">
       <Link
@@ -36,15 +38,37 @@ const Header = () => {
         >
           <FaMoon />
         </Button>
-        <Link to="/sign-in">
-          <Button
-            // gradientDuoTone="blackToGray"
-            className=" bg-gradient-to-r from-yellow-500 via-yellow-350 to-yellow-300 hover:from-yellow-500 hover:via-yellow-350 hover:to-yellow-300 rounded-lg text-white shadow-md"
-            outline
+        {currentUser ? (
+          <Dropdown
+            arrowIcon={false}
+            inline
+            label={
+              <Avatar alt="user" image={currentUser.profilePicture} rounded />
+            }
           >
-            Sign In
-          </Button>
-        </Link>
+            <Dropdown.Header>
+              <span className="block text-sm">@{currentUser.username}</span>
+              <span className="block text-sm font-medium truncate">
+                {currentUser.email}
+              </span>
+            </Dropdown.Header>
+            <Link to="/dashboard?tab=profile">
+              <Dropdown.Item>Profile</Dropdown.Item>
+            </Link>
+            <Dropdown.Divider />
+            <Dropdown.Item>Sign out</Dropdown.Item>
+          </Dropdown>
+        ) : (
+          <Link to="/sign-in">
+            <Button
+              // gradientDuoTone="blackToGray"
+              className=" bg-gradient-to-r from-yellow-500 via-yellow-350 to-yellow-300 hover:from-yellow-500 hover:via-yellow-350 hover:to-yellow-300 rounded-lg text-white shadow-md"
+              outline
+            >
+              Sign In
+            </Button>
+          </Link>
+        )}
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse>
