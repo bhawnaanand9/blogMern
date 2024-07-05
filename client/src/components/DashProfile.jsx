@@ -20,9 +20,10 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
+import { Link } from "react-router-dom";
 
 const DashProfile = () => {
-  const { currentUser, error } = useSelector((state) => state.user);
+  const { currentUser, error, loading } = useSelector((state) => state.user);
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUploadingProgress, setImageFileUploadingProgress] =
     useState(null);
@@ -243,9 +244,20 @@ const DashProfile = () => {
           type="submit"
           className=" bg-gradient-to-r from-yellow-500 via-yellow-350 to-yellow-300 hover:from-yellow-500 hover:via-yellow-350 hover:to-yellow-300 rounded-lg text-white shadow-md"
           outline
+          disabled={loading || imageFileUploading}
         >
-          Update
+          {loading ? "Loading..." : "Update"}
         </Button>
+        {currentUser.isAdmin && (
+          <Link to={"/create-post"}>
+            <Button
+              type="button"
+              className="w-full bg-gradient-to-r from-yellow-500 via-yellow-350 to-yellow-300 hover:from-yellow-500 hover:via-yellow-350 hover:to-yellow-300 rounded-lg text-white shadow-md"
+            >
+              Create a post
+            </Button>
+          </Link>
+        )}
       </form>
       <div className="text-red-500 justify-between mt-5 flex">
         <span onClick={() => setShowModal(true)} className="cursor-pointer">
