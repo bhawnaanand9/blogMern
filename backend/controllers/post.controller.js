@@ -35,8 +35,8 @@ export const getposts = async (req, res, next) => {
     const posts = await Post.find({
       ...(req.query.userId && { userId: req.query.userId }),
       ...(req.query.category && { category: req.query.category }),
-      ...(req.query.slug && { category: req.query.slug }),
-      ...(req.query.postId && { category: req.query.postId }),
+      ...(req.query.slug && { slug: req.query.slug }),
+      ...(req.query.postId && { _id: req.query.postId }),
       ...(req.query.searchTerm && {
         $or: [
           { title: { $regex: req.query.searchTerm, $options: "i" } },
@@ -49,7 +49,7 @@ export const getposts = async (req, res, next) => {
       .limit(limit);
 
     const totalPosts = await Post.countDocuments();
-
+    console.log(totalPosts);
     const now = new Date();
     const oneMonthAgo = new Date(
       now.getFullYear(),
